@@ -1,7 +1,7 @@
 import { new_card } from '../main_content/content.js';
 import { createSkeletonCard } from '../main_content/content.js';
 
-async function get_data(lat,long,city) {
+export async function get_data(lat,long,city) {
     try{
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
         const skeleton = createSkeletonCard();
@@ -29,6 +29,7 @@ async function get_data(lat,long,city) {
 }
 
 export async function get_geocode(city) {
+    try{
         console.log('get_geocode function started');
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
 
@@ -55,7 +56,10 @@ export async function get_geocode(city) {
         get_data(lat,long,city);
         
     }
-
+    catch(error){
+        console.log(error);
+    }
+}
 //current location cannot be found by open meteo.
 export async function current_location(){
     try{

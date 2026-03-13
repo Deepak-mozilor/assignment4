@@ -1,7 +1,8 @@
 import { suggest } from './search_city/search.js';
 import { current_location } from './api/Wheather_api.js';
 
-current_location();
+await setInterval(current_location() , 600000);
+
 const input = document.querySelector('#city-name');
 
 let timer;

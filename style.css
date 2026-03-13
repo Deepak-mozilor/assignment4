@@ -1,0 +1,16 @@
+.city-card{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 350px;
+    max-width: 300px;
+    width: 150px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.dashboard{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

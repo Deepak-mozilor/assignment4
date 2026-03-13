@@ -1,6 +1,4 @@
 
-
-
 export function new_card(city_value, temp_value, humidity_value, feels_like_value, wind_speed_value, weather_code_value){
     const dashboard = document.querySelector('.dashboard');
 
@@ -40,4 +38,21 @@ export function new_card(city_value, temp_value, humidity_value, feels_like_valu
     div.append(wind_speed);
     div.append(weather_code);
     dashboard.append(div);
+}
+
+export function createSkeletonCard() {
+    const card = document.createElement("div");
+    card.classList.add("city-card", "skeleton");
+
+    card.innerHTML = `
+        <div class="skeleton-text city-name"></div>
+        <div class="skeleton-text temp"></div>
+        <div class="skeleton-text small"></div>
+        <div class="skeleton-text small"></div>
+        <div class="skeleton-text small"></div>
+    `;
+
+    document.querySelector(".dashboard").appendChild(card);
+
+    return card;
 }

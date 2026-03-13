@@ -14,3 +14,46 @@
     flex-direction: row;
     justify-content: space-evenly;
 }
+
+.skeleton {
+    padding: 16px;
+    border-radius: 10px;
+    background: #f3f3f3;
+}
+
+.skeleton-text {
+    height: 14px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background: linear-gradient(
+        90deg,
+        #eeeeee 25%,
+        #dddddd 37%,
+        #eeeeee 63%
+    );
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.4s ease infinite;
+}
+
+.city-name {
+    width: 60%;
+    height: 20px;
+}
+
+.temp {
+    width: 40%;
+    height: 28px;
+}
+
+.small {
+    width: 80%;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}

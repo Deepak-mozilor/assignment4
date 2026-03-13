@@ -1,9 +1,11 @@
 import { new_card } from '../main_content/content.js';
-
+import { createSkeletonCard } from '../main_content/content.js';
 
 async function get_data(lat,long,city) {
     try{
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
+        const skeleton = createSkeletonCard();
+
 
         let weather_response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code`);
 
@@ -15,7 +17,8 @@ async function get_data(lat,long,city) {
         let wind_speed = data.current.wind_speed_10m;
         let weather_code = data.current.weather_code;
 
-        
+        skeleton.remove();
+
         new_card(city,temp,humidity,feels_like,wind_speed,weather_code);
         
         localStorage.setItem('store_city',JSON.stringify(city_arr));
@@ -39,12 +42,16 @@ export async function get_geocode(city) {
         let lat = geocode.results[0].latitude;
         let long = geocode.results[0].longitude;
 
+        
+
         if (city_arr.some(item => item.city === normalizedCity)) {
             alert("City already present");
             return;
         }
 
         city_arr.push({latitude : lat, longitude : long, city:normalizedCity});
+
+        localStorage.setItem('store_city',JSON.stringify(city_arr));
         get_data(lat,long,city);
         
     }

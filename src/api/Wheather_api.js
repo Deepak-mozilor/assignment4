@@ -1,8 +1,10 @@
 import { new_card } from '../main_content/content.js';
 
 
-async function get_data(lat,long,city,city_arr) {
+async function get_data(lat,long,city) {
     try{
+        const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
+
         let weather_response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code`);
 
         let data = await weather_response.json();
@@ -43,8 +45,7 @@ export async function get_geocode(city) {
         }
 
         city_arr.push({latitude : lat, longitude : long, city:normalizedCity});
-        localStorage.setItem('store_city', JSON.stringify(city_arr));
-        get_data(lat,long,city,city_arr);
+        get_data(lat,long,city);
         
     }
 
@@ -73,7 +74,7 @@ export async function current_location(){
 
         else{
             for (let items of city_arr){
-                get_data(items.latitude, items.longitude, items.city, city_arr);
+                await get_data(items.latitude, items.longitude, items.city, city_arr);
             }
         }
     }

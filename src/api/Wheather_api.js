@@ -7,7 +7,7 @@ import { to_fahrenheit } from "../utils/unit_converter.js";
 export async function get_data(lat,long,city) {
     try{
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
-        const skeleton = createSkeletonCard();
+        const skeleton = document.querySelector('.skeleton');
 
         let weather_response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code`);
 
@@ -19,7 +19,7 @@ export async function get_data(lat,long,city) {
         let wind_speed = data.current.wind_speed_10m;
         let weather_code = data.current.weather_code;
 
-        skeleton.remove();
+        if (skeleton) skeleton.remove();
 
         const unit_btn = document.querySelector('.unit');
         let unit = '°C';
@@ -69,7 +69,7 @@ export async function get_geocode(city) {
         
     }
     catch(error){
-        console.log(error);
+        error_card(error)
     }
 }
 //current location cannot be found by open meteo.

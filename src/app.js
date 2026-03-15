@@ -1,7 +1,10 @@
 import { suggest } from './search_city/search.js';
 import { current_location } from './api/Wheather_api.js';
+import { createSkeletonCard } from './main_content/content.js';
 
+createSkeletonCard();   
 current_location();
+
 await setInterval(current_location, 600000);
 const input = document.querySelector('#city-name');
 
@@ -25,8 +28,8 @@ clear.addEventListener('click', () =>{
 
 const unit_btn = document.querySelector('.unit');
 
-unit_btn.addEventListener('click', () =>{
-    if(unit_btn.id === 'celcius'){
+unit_btn.addEventListener('click', (e) =>{
+    if(e.target.id === 'celcius'){
         unit_btn.setAttribute('id','fahrenheit');
     }
     else{

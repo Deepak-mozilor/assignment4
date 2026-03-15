@@ -1,63 +1,235 @@
-.city-card{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    height: 350px;
-    max-width: 300px;
-    width: 150px;
-    border: 1px solid black;
-    border-radius: 10px;
+/* Global */
+
+body{
+    margin:0;
+    background:#0f172a;
+    font-family:system-ui, -apple-system, sans-serif;
+    color:#e2e8f0;
 }
+
+/* Header */
+
+header{
+    text-align:center;
+    padding:30px 20px;
+}
+
+h1{
+    margin-bottom:20px;
+    font-weight:600;
+}
+
+/* Form */
+
+#city-form{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+label{
+    display:none;
+}
+
+input{
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    background:#1e293b;
+    color:#e2e8f0;
+    outline:none;
+}
+
+input::placeholder{
+    color:#94a3b8;
+}
+
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:8px;
+    background:#38bdf8;
+    color:#0f172a;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    background:#0ea5e9;
+}
+
+/* Unit button */
+
+.unit{
+    margin-top:15px;
+    background:#6366f1;
+    color:white;
+}
+
+.unit:hover{
+    background:#4f46e5;
+}
+
+/* Suggestions */
+
+#suggestions{
+    list-style:none;
+    padding:0;
+    margin-top:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+#suggestions li{
+    padding:6px 10px;
+    background:#1e293b;
+    margin:3px 0;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+#suggestions li:hover{
+    background:#334155;
+}
+
+/* Divider */
+
+hr{
+    border:none;
+    height:1px;
+    background:#334155;
+}
+
+/* Dashboard layout */
 
 .dashboard{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+    padding:30px;
 }
 
-.skeleton {
-    padding: 16px;
-    border-radius: 10px;
-    background: #f3f3f3;
+/* Weather cards */
+
+.city-card{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    width:220px;
+    padding:18px;
+
+    background:#1e293b;
+    border-radius:12px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,0.4);
+
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.skeleton-text {
-    height: 14px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    background: linear-gradient(
+.city-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 25px rgba(0,0,0,0.6);
+}
+
+.city-card p{
+    margin:0;
+    font-size:14px;
+    color:#cbd5f5;
+}
+
+#city-card-name{
+    font-size:18px;
+    font-weight:600;
+    color:#f1f5f9;
+}
+
+#temperature{
+    font-size:22px;
+    font-weight:600;
+    color:#38bdf8;
+}
+
+/* Remove button */
+
+.remove{
+    display:block;
+    margin:16px auto 0 auto;
+
+    border:none;
+    background:#ef4444;
+    color:white;
+
+    width:36px;
+    height:32px;
+
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.remove:hover{
+    background:#dc2626;
+}
+
+/* Clear button */
+
+#clear{
+    display:block;
+    margin:20px auto 40px auto;
+    background:#ef4444;
+    color:white;
+}
+
+#clear:hover{
+    background:#dc2626;
+}
+
+/* Skeleton loading */
+
+.skeleton{
+    background:#1e293b;
+}
+
+.skeleton-text{
+    height:12px;
+    margin-bottom:10px;
+    border-radius:4px;
+
+    background:linear-gradient(
         90deg,
-        #eeeeee 25%,
-        #dddddd 37%,
-        #eeeeee 63%
+        #1e293b 25%,
+        #334155 37%,
+        #1e293b 63%
     );
-    background-size: 400% 100%;
-    animation: skeleton-loading 1.4s ease infinite;
+
+    background-size:400% 100%;
+    animation:skeleton-loading 1.2s infinite;
 }
 
-.city-name {
-    width: 60%;
-    height: 20px;
+.city-name{
+    width:60%;
+    height:18px;
 }
 
-.temp {
-    width: 40%;
-    height: 28px;
+.temp{
+    width:40%;
+    height:22px;
 }
 
-.small {
-    width: 80%;
+.small{
+    width:80%;
 }
 
-@keyframes skeleton-loading {
-    0% {
-        background-position: 100% 50%;
+@keyframes skeleton-loading{
+    0%{
+        background-position:100% 50%;
     }
-    100% {
-        background-position: 0 50%;
+    100%{
+        background-position:0 50%;
     }
-}
-
-#remove{
-    width: fit-content;
 }

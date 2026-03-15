@@ -1,5 +1,5 @@
 
-export function new_card(city_value, temp_value, humidity_value, feels_like_value, wind_speed_value, weather_code_value){
+export function new_card(city_value, temp_value, humidity_value, feels_like_value, wind_speed_value, weather_code_value,unit){
     const dashboard = document.querySelector('.dashboard');
 
     const div = document.createElement('div');
@@ -23,12 +23,19 @@ export function new_card(city_value, temp_value, humidity_value, feels_like_valu
     const weather_code = document.createElement('p');
     weather_code.id = "weather-code";
 
+    const remove = document.createElement('button');
+    remove.textContent = 'x';
+    remove.setAttribute('class','remove');
+    remove.setAttribute('id',`${city_value.toLowerCase()}`);
+
+
+    
 
     city_name.textContent = 'City : ' + city_value;
-    temperature.textContent = 'Temperature : ' + temp_value;
-    humidity.textContent = 'humidity : ' + humidity_value;
-    feels_like.textContent = 'Feels Like : ' + feels_like_value;
-    wind_speed.textContent = 'Wind Speed 10m : ' + wind_speed_value;
+    temperature.textContent = 'Temperature : ' + temp_value + unit;
+    humidity.textContent = 'humidity : ' + humidity_value + '%';
+    feels_like.textContent = 'Feels Like : ' + feels_like_value + unit;
+    wind_speed.textContent = 'Wind Speed 10m : ' + wind_speed_value + ' kph';
     weather_code.textContent = 'Weather Code : ' + weather_code_value;
 
     div.append(city_name);
@@ -37,7 +44,9 @@ export function new_card(city_value, temp_value, humidity_value, feels_like_valu
     div.append(feels_like);
     div.append(wind_speed);
     div.append(weather_code);
+    div.append(remove);
     dashboard.append(div);
+
 }
 
 export function createSkeletonCard() {

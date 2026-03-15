@@ -57,3 +57,7 @@
         background-position: 0 50%;
     }
 }
+
+#remove{
+    width: fit-content;
+}

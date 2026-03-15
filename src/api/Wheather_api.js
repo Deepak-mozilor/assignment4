@@ -1,11 +1,13 @@
 import { new_card } from '../main_content/content.js';
 import { createSkeletonCard } from '../main_content/content.js';
+import { remove_btn } from '../utils/remove.js';
+import { error_card } from '../errors/error_card.js';
+import { to_fahrenheit } from "../utils/unit_converter.js";
 
 export async function get_data(lat,long,city) {
     try{
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
         const skeleton = createSkeletonCard();
-
 
         let weather_response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code`);
 
@@ -19,12 +21,22 @@ export async function get_data(lat,long,city) {
 
         skeleton.remove();
 
-        new_card(city,temp,humidity,feels_like,wind_speed,weather_code);
+        const unit_btn = document.querySelector('.unit');
+        let unit = '°C';
+        if(unit_btn.id === 'fahrenheit'){
+            unit = '°F';
+            temp = Math.floor(to_fahrenheit(temp));
+            feels_like = Math.floor(to_fahrenheit(feels_like));
+        }
+
+        new_card(city,temp,humidity,feels_like,wind_speed,weather_code,unit);
+        remove_btn();
+
         
         localStorage.setItem('store_city',JSON.stringify(city_arr));
     }
     catch(error){
-        console.log(error);
+        error_card(error);
     }
 }
 
@@ -71,13 +83,18 @@ export async function current_location(){
                 const lon = position.coords.longitude;
             
                 const response = await fetch(
-                    //since open meteo does not provide city name. the below link is given by chatgpt. 
                     `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
                 );
             
                 const data = await response.json();
             
-                const city = data.address.city;
+                const city =
+                data.address.city ||
+                data.address.town ||
+                data.address.village ||
+                data.address.municipality;
+
+                console.log(data.address);
             
                 get_geocode(city);
             });

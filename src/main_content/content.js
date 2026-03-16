@@ -1,3 +1,4 @@
+import { weatherCodeToEmoji } from '../utils/weather_code.js';
 
 export function new_card(city_value, temp_value, humidity_value, feels_like_value, wind_speed_value, weather_code_value,unit){
     const dashboard = document.querySelector('.dashboard');
@@ -36,7 +37,7 @@ export function new_card(city_value, temp_value, humidity_value, feels_like_valu
     humidity.textContent = 'humidity : ' + humidity_value + '%';
     feels_like.textContent = 'Feels Like : ' + feels_like_value + unit;
     wind_speed.textContent = 'Wind Speed 10m : ' + wind_speed_value + ' kph';
-    weather_code.textContent = 'Weather Code : ' + weather_code_value;
+    weather_code.textContent = weatherCodeToEmoji(weather_code_value);
 
     div.append(city_name);
     div.append(temperature);

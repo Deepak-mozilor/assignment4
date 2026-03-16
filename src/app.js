@@ -28,13 +28,18 @@ clear.addEventListener('click', () =>{
 
 const unit_btn = document.querySelector('.unit');
 
-unit_btn.addEventListener('click', (e) =>{
-    if(e.target.id === 'celcius'){
-        unit_btn.setAttribute('id','fahrenheit');
+
+unit_btn.addEventListener('click', () => {
+
+    if(unit_btn.id === 'celsius'){
+        unit_btn.id = 'fahrenheit';
+    } else {
+        unit_btn.id = 'celsius';
     }
-    else{
-        unit_btn.setAttribute('id','celcius');
-    }
+
     document.querySelectorAll('.city-card').forEach(card => card.remove());
+
+    createSkeletonCard();
+
     current_location();
 });

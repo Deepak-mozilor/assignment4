@@ -7,7 +7,6 @@ body{
     color:#e2e8f0;
 }
 
-/* Header */
 
 header{
     text-align:center;
@@ -19,7 +18,6 @@ h1{
     font-weight:600;
 }
 
-/* Form */
 
 #city-form{
     display:flex;
@@ -120,7 +118,7 @@ hr{
     flex-direction:column;
     gap:8px;
 
-    width:220px;
+    width:260px;
     padding:18px;
 
     background:#1e293b;
@@ -232,4 +230,63 @@ hr{
     100%{
         background-position:0 50%;
     }
+}
+
+
+.forecast-section {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #334155;
+}
+
+.forecast-title {
+    font-size: 12px !important;
+    font-weight: 600;
+    color: #94a3b8 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px !important;
+}
+
+.forecast-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.forecast-day {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.forecast-date {
+    color: #94a3b8;
+}
+
+.forecast-icon {
+    font-size: 14px;
+}
+
+.forecast-temp {
+    display: flex;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.forecast-max {
+    color: #38bdf8;
+}
+
+.forecast-min {
+    color: #64748b;
+}
+
+
+.forecast-placeholder {
+    width: 100%;
+    height: 80px;
+    margin-top: 12px;
 }

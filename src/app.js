@@ -1,26 +1,26 @@
 import { suggest } from './search_city/search.js';
-import { current_location } from './api/Wheather_api.js';
+import { current_location, createAutoRefresh } from './api/Wheather_api.js';
 import { createSkeletonCard } from './main_content/content.js';
 
-createSkeletonCard();   
+createSkeletonCard();
 current_location();
 
-await setInterval(current_location, 600000);
+const autoRefresh = createAutoRefresh(600000);
+autoRefresh.start();
+
 const input = document.querySelector('#city-name');
 
 let timer;
-
 input.addEventListener("input", (e) => {
     clearTimeout(timer);
-
     timer = setTimeout(() => {
         suggest(e.target.value);
     }, 300);
 });
 
-const clear=document.querySelector('#clear');
+const clear = document.querySelector('#clear');
 
-clear.addEventListener('click', () =>{
+clear.addEventListener('click', () => {
     localStorage.clear();
     document.querySelectorAll('.city-card').forEach(card => card.remove());
     current_location();
@@ -28,10 +28,8 @@ clear.addEventListener('click', () =>{
 
 const unit_btn = document.querySelector('.unit');
 
-
 unit_btn.addEventListener('click', () => {
-
-    if(unit_btn.id === 'celsius'){
+    if (unit_btn.id === 'celsius') {
         unit_btn.id = 'fahrenheit';
     } else {
         unit_btn.id = 'celsius';
@@ -40,6 +38,5 @@ unit_btn.addEventListener('click', () => {
     document.querySelectorAll('.city-card').forEach(card => card.remove());
 
     createSkeletonCard();
-
     current_location();
 });

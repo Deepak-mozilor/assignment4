@@ -22,6 +22,8 @@ export function removeBtn(){
         e.target.closest('.city-card').remove();
 
         if(cityArr.length === 0){
+            const dashboard = document.querySelector('.dashboard');
+            dashboard.innerHTML = '';
             emptyDashboard();
         }
     });

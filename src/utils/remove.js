@@ -1,3 +1,5 @@
+import { emptyDashboard } from "../main_content/emptyContent.js";
+
 export function remove_btn(){
 
     document.addEventListener('click', (e)=>{
@@ -18,5 +20,9 @@ export function remove_btn(){
         }
 
         e.target.closest('.city-card').remove();
+
+        if(city_arr.length === 0){
+            emptyDashboard();
+        }
     });
 }

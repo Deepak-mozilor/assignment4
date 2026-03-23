@@ -1,4 +1,5 @@
 import { get_geocode } from "../api/Wheather_api.js";
+import { refreshAll } from "../api/Wheather_api.js";
 
 const suggestion = document.querySelector('#suggestions');
 console.log('search.js running');
@@ -40,14 +41,24 @@ suggestion.addEventListener('click' , (e) =>{
 
             input.value = '';
             suggestion.textContent='';
+            const dashboard = document.querySelector('.dashboard');
+            dashboard.innerHTML = '';
+            refreshAll();
         }
     });
 
 const form = document.querySelector('#city-form');
 
 form.addEventListener('submit', (e) =>{
+    const dashboard = document.querySelector('.dashboard');
+    dashboard.innerHTML = '';
+
+    suggestion.innerHTML = '';
+
     e.preventDefault();
     const city = document.querySelector('#city-name');
     let city_name = city.value;
     get_geocode(city_name);
+    refreshAll();
+    city.value = '';
 });

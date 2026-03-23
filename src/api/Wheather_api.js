@@ -1,5 +1,4 @@
 import { new_card } from '../main_content/content.js';
-import { createSkeletonCard } from '../main_content/content.js';
 import { remove_btn } from '../utils/remove.js';
 import { error_card, WeatherError } from '../errors/error_card.js';
 import { to_fahrenheit } from "../utils/unit_converter.js";
@@ -49,6 +48,10 @@ export async function get_data(lat, long, city) {
             throw new WeatherError(`Weather fetch failed for ${city}`, currentRes.status);
         }
 
+        if (!forecastRes.ok) {
+            throw new WeatherError(`Forecast fetch failed for ${city}`, forecastRes.status);
+        }
+
         const data = await currentRes.json();
         const forecastData = await forecastRes.json();
 
@@ -61,7 +64,7 @@ export async function get_data(lat, long, city) {
 
         skeleton?.remove();
 
-        const unit_btn = document.querySelector('.unit');
+        const unit_btn = document.querySelector('.unit-btn');
         let unit = '°C';
         let temp = Math.floor(temp_raw);
         let feels_like = Math.floor(feels_like_raw);
@@ -80,9 +83,22 @@ export async function get_data(lat, long, city) {
 
         localStorage.setItem('store_city', JSON.stringify(city_arr));
     } catch (error) {
-        const weatherError = error instanceof WeatherError
-            ? error
-            : new WeatherError(error?.message ?? 'Unknown error fetching data');
+        let weatherError;
+
+        if (error instanceof TypeError) {
+            weatherError = new WeatherError(
+                "Network error. Please check your connection.",
+                0
+            );
+        } else if (error instanceof WeatherError) {
+            weatherError = error;
+        } else {
+            weatherError = new WeatherError(
+                error?.message ?? 'Unknown error',
+                500 
+            );
+        }
+
         error_card(weatherError);
     }
 }
@@ -174,29 +190,47 @@ export async function current_location() {
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
 
         if (city_arr.length === 0) {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const lat = position.coords?.latitude;
-                const lon = position.coords?.longitude;
+            const position = await getPosition(); // ✅ now catchable
 
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
-                );
+            const lat = position.coords?.latitude;
+            const lon = position.coords?.longitude;
 
-                const data = await response.json();
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+            );
 
-                const city =
-                    data.address?.city ??
-                    data.address?.town ??
-                    data.address?.village ??
-                    data.address?.municipality ??
-                    'Unknown location';
+            if (!response.ok) {
+                throw new WeatherError("Failed to fetch location", response.status);
+            }
 
-                get_geocode(city);
-            });
+            const data = await response.json();
+
+            const city =
+                data.address?.city ??
+                data.address?.town ??
+                data.address?.village ??
+                data.address?.municipality ??
+                'Unknown location';
+
+            get_geocode(city);
+
         } else {
             await refreshAll();
         }
+
     } catch (error) {
-        console.error('current_location error:', error?.message ?? error);
+        let weatherError;
+
+        if (error instanceof TypeError) {
+            weatherError = new WeatherError("Network error", 0);
+        }
+        else if (error instanceof WeatherError) {
+            weatherError = error;
+        }
+        else {
+            weatherError = new WeatherError("Unknown error", 500);
+        }
+
+        error_card(weatherError);
     }
 }

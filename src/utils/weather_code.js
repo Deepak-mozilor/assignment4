@@ -1,45 +1,44 @@
-export function weatherCodeToEmoji(code){
-
+export function weatherCodeToEmoji(code) {
     const weatherMap = {
-        0: "☀️ Clear sky",
-        1: "🌤️ Mainly clear",
-        2: "⛅ Partly cloudy",
-        3: "☁️ Overcast",
+        0: { emoji: "☀️", text: "Clear sky" },
+        1: { emoji: "🌤️", text: "Mainly clear" },
+        2: { emoji: "⛅", text: "Partly cloudy" },
+        3: { emoji: "☁️", text: "Overcast" },
 
-        45: "🌫️ Fog",
-        48: "🌫️ Depositing rime fog",
+        45: { emoji: "🌫️", text: "Fog" },
+        48: { emoji: "🌫️", text: "Rime fog" },
 
-        51: "🌦️ Light drizzle",
-        53: "🌦️ Moderate drizzle",
-        55: "🌧️ Dense drizzle",
+        51: { emoji: "🌦️", text: "Light drizzle" },
+        53: { emoji: "🌦️", text: "Moderate drizzle" },
+        55: { emoji: "🌧️", text: "Heavy drizzle" },
 
-        56: "🌧️ Freezing drizzle",
-        57: "🌧️ Heavy freezing drizzle",
+        56: { emoji: "🌧️", text: "Freezing drizzle" },
+        57: { emoji: "🌧️", text: "Heavy freezing drizzle" },
 
-        61: "🌦️ Slight rain",
-        63: "🌧️ Moderate rain",
-        65: "🌧️ Heavy rain",
+        61: { emoji: "🌦️", text: "Light rain" },
+        63: { emoji: "🌧️", text: "Moderate rain" },
+        65: { emoji: "🌧️", text: "Heavy rain" },
 
-        66: "🌧️ Freezing rain",
-        67: "🌧️ Heavy freezing rain",
+        66: { emoji: "🌧️", text: "Freezing rain" },
+        67: { emoji: "🌧️", text: "Heavy freezing rain" },
 
-        71: "🌨️ Slight snow",
-        73: "❄️ Moderate snow",
-        75: "❄️ Heavy snow",
+        71: { emoji: "🌨️", text: "Light snow" },
+        73: { emoji: "❄️", text: "Moderate snow" },
+        75: { emoji: "❄️", text: "Heavy snow" },
 
-        77: "🌨️ Snow grains",
+        77: { emoji: "🌨️", text: "Snow grains" },
 
-        80: "🌦️ Rain showers",
-        81: "🌧️ Moderate rain showers",
-        82: "⛈️ Violent rain showers",
+        80: { emoji: "🌦️", text: "Rain showers" },
+        81: { emoji: "🌧️", text: "Moderate showers" },
+        82: { emoji: "⛈️", text: "Heavy showers" },
 
-        85: "🌨️ Snow showers",
-        86: "❄️ Heavy snow showers",
+        85: { emoji: "🌨️", text: "Snow showers" },
+        86: { emoji: "❄️", text: "Heavy snow showers" },
 
-        95: "⛈️ Thunderstorm",
-        96: "⛈️ Thunderstorm with hail",
-        99: "⛈️ Heavy thunderstorm with hail"
+        95: { emoji: "⛈️", text: "Thunderstorm" },
+        96: { emoji: "⛈️", text: "Storm with hail" },
+        99: { emoji: "⛈️", text: "Heavy storm with hail" }
     };
 
-    return weatherMap[code] || "❓ Unknown weather";
+    return weatherMap[code] || { emoji: "❓", text: "Unknown weather" };
 }

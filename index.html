@@ -8,16 +8,22 @@
 </head>
 <body>
     <header>
-        <h1>Weather</h1>
+        <img class="logo" src="images/Frame.png" alt="logo">
+        <h1>Skywatcher</h1>
         <form id="city-form">
-            <label for="city-name">Enter city name</label>
-            <input type="text" id="city-name" name="city-name">
-            <button type="submit">Submit</button>
+            <label for="city-name"></label>
+
+            <div class="input-wrapper">
+                <span class="search"><img class="search-icon"  src="images/Frame (4).png" alt="Search icon"></span>
+                <input type="text" id="city-name" name="city-name">
+                <button type="submit">Add city</button>
+                <ul id="suggestions"></ul>
+            </div>
+            
         </form>
-        <ul id="suggestions"></ul>
-        <button class="unit" id="celsius">Change unit</button>
+        
+        <button class="unit-btn" id="celsius">Change unit</button>
     </header>
-    <hr>
     <main>
         <div class="dashboard">
             

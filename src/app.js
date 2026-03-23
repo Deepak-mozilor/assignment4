@@ -1,6 +1,7 @@
 import { suggest } from './search_city/search.js';
 import { current_location, createAutoRefresh } from './api/Wheather_api.js';
 import { createSkeletonCard } from './main_content/content.js';
+import { emptyDashboard } from './main_content/emptyContent.js';
 
 createSkeletonCard();
 current_location();
@@ -23,10 +24,10 @@ const clear = document.querySelector('#clear');
 clear.addEventListener('click', () => {
     localStorage.clear();
     document.querySelectorAll('.city-card').forEach(card => card.remove());
-    current_location();
+    emptyDashboard();
 });
 
-const unit_btn = document.querySelector('.unit');
+const unit_btn = document.querySelector('.unit-btn');
 
 unit_btn.addEventListener('click', () => {
     if (unit_btn.id === 'celsius') {
@@ -40,3 +41,4 @@ unit_btn.addEventListener('click', () => {
     createSkeletonCard();
     current_location();
 });
+

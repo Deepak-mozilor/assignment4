@@ -185,40 +185,59 @@ export function createAutoRefresh(intervalMs = 600000) {
 
 // --- Current location ---
 
+
+function getPosition() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+}
+
 export async function current_location() {
     try {
         const city_arr = JSON.parse(localStorage.getItem('store_city')) || [];
 
         if (city_arr.length === 0) {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const lat = position.coords?.latitude;
-                const lon = position.coords?.longitude;
+            const position = await getPosition(); // ✅ now catchable
 
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
-                );
+            const lat = position.coords?.latitude;
+            const lon = position.coords?.longitude;
 
-                if (!response.ok) {
-                    throw new WeatherError(`Network Error`);
-                }
-                const data = await response.json();
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+            );
 
-                const city =
-                    data.address?.city ??
-                    data.address?.town ??
-                    data.address?.village ??
-                    data.address?.municipality ??
-                    'Unknown location';
+            if (!response.ok) {
+                throw new WeatherError("Failed to fetch location", response.status);
+            }
 
-                get_geocode(city);
-            });
+            const data = await response.json();
+
+            const city =
+                data.address?.city ??
+                data.address?.town ??
+                data.address?.village ??
+                data.address?.municipality ??
+                'Unknown location';
+
+            get_geocode(city);
+
         } else {
             await refreshAll();
         }
+
     } catch (error) {
-        const weatherError = error instanceof WeatherError
-            ? error
-            : new WeatherError(error?.message ?? 'Unknown error fetching data');
+        let weatherError;
+
+        if (error instanceof TypeError) {
+            weatherError = new WeatherError("Network error", 0);
+        }
+        else if (error instanceof WeatherError) {
+            weatherError = error;
+        }
+        else {
+            weatherError = new WeatherError("Unknown error", 500);
+        }
+
         error_card(weatherError);
     }
 }

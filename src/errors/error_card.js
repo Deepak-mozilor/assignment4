@@ -26,30 +26,46 @@ export function error_card(error) {
 
     let type = 'generic';
     let icon = '⚠️';
-    let title = 'Error';
+    let title = 'Unknown Error';
 
-    console.log(error.statusCode);
-    if (error instanceof WeatherError) {
-        if (error.statusCode === 404) {
-            type = 'not-found';
-            icon = '🌐';
-            title = 'City Not Found';
-        } else if (error.statusCode >= 500) {
-            type = 'network';
-            icon = '⚡';
-            title = 'Network Error';
-        }
+    const message = error?.message?.toLowerCase() || '';
+
+    // ✅ Detect City Not Found
+    if (
+        message.includes('not found') ||
+        message.includes('unknown location') ||
+        message.includes('no results')
+    ) {
+        type = 'not-found';
+        icon = '🌐';
+        title = 'City Not Found';
+    }
+
+    // ✅ Detect Network Error
+    else if (
+        message.includes('network') ||
+        message.includes('failed to fetch') ||
+        message.includes('timeout')
+    ) {
+        type = 'network';
+        icon = '⚡';
+        title = 'Network Error';
+    }
+
+    // ✅ Default fallback
+    else {
+        type = 'generic';
+        icon = '⚠️';
+        title = 'Something Went Wrong';
     }
 
     card.classList.add(type);
-
-    const message = error?.message ?? 'Something went wrong';
 
     card.innerHTML = `
         <div class="error-content">
             <div class="error-icon">${icon}</div>
             <h3>${title}</h3>
-            <p>${message}</p>
+            <p>${error?.message ?? 'Something went wrong'}</p>
             <button class="error-close">Try Again</button>
         </div>
     `;
@@ -58,6 +74,5 @@ export function error_card(error) {
 
     card.querySelector('.error-close').addEventListener('click', () => {
         card.remove();
-        refreshAll();
     });
 }

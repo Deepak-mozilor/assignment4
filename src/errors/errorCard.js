@@ -1,4 +1,4 @@
-import { refreshAll } from "../api/Wheather_api.js";
+import { refreshAll } from "../api/wheatherApi.js";
 
 export class WeatherError extends Error {
     #statusCode;
@@ -18,7 +18,7 @@ export class WeatherError extends Error {
     }
 }
 
-export function error_card(error) {
+export function errorCard(error) {
     const container = document.querySelector('.dashboard');
 
     const card = document.createElement('div');

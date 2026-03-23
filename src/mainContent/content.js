@@ -1,4 +1,4 @@
-import { weatherCodeToEmoji } from '../utils/weather_code.js';
+import { weatherCodeToEmoji } from '../utils/weatherCode.js';
 
 class CityCard {
     #city;
@@ -108,11 +108,26 @@ class CityCard {
     }
 }
 
-export function new_card(city_value, temp_value, humidity_value, feels_like_value, wind_speed_value, weather_code_value, unit, forecastDays) {
+export function newCard(
+    cityValue,
+    tempValue,
+    humidityValue,
+    feelsLikeValue,
+    windSpeedValue,
+    weatherCodeValue,
+    unit,
+    forecastDays
+) {
     const dashboard = document.querySelector('.dashboard');
 
-    new CityCard(city_value, unit)
-        .buildCurrent(temp_value, humidity_value, feels_like_value, wind_speed_value, weather_code_value)
+    new CityCard(cityValue, unit)
+        .buildCurrent(
+            tempValue,
+            humidityValue,
+            feelsLikeValue,
+            windSpeedValue,
+            weatherCodeValue
+        )
         .buildForecast(forecastDays)
         .appendTo(dashboard);
 }

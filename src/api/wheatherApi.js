@@ -150,6 +150,8 @@ export async function refreshAll() {
 
     if (cityArr.length === 0) return;
 
+    document.querySelector('.dashboard').innerHTML = '';
+
     const results = await Promise.allSettled(
         cityArr.map(item => getData(item.latitude, item.longitude, item.city))
     );

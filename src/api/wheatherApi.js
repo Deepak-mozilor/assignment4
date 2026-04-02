@@ -26,7 +26,7 @@ function parseForecast(daily, unitBtn) {
             date: formatDate(dateStr),
             maxTemp,
             minTemp,
-            weatherCode: daily.weatherCode?.[i] ?? 0,
+            weatherCode: daily.weather_code?.[i] ?? 0,
         };
     });
 }
@@ -35,13 +35,27 @@ function parseForecast(daily, unitBtn) {
 
 export async function getData(lat, long, city) {
     try {
-        const cityArr = JSON.parse(localStorage.getItem('storeCity')) || [];
         const skeleton = document.querySelector('.skeleton');
 
         // Fetch current weather AND 5-day daily forecast in parallel
         const [currentRes, forecastRes] = await Promise.all([
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code`),
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&daily=temperature_2m_max,temperature_2m_min,weather_code&forecast_days=5&timezone=auto`)
+            fetch(`http://127.0.0.1:8000/addtodb`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    city: city,
+                    latitude: lat,
+                    longitude: long
+                })
+            }),
+            fetch(`http://127.0.0.1:8000/forecast?lat=${lat}&long=${long}`,{
+                    method: 'GET',
+                    credentials: 'include'
+                }
+            )
         ]);
 
         if (!currentRes.ok) {
@@ -53,14 +67,14 @@ export async function getData(lat, long, city) {
         }
 
         const data = await currentRes.json();
+        console.log(data);
         const forecastData = await forecastRes.json();
 
-        // Optional chaining on all data accesses
-        const tempRaw = data.current?.temperature_2m ?? 0;
-        const humidity = data.current?.relative_humidity_2m ?? 0;
-        const feelsLikeRaw = data.current?.apparent_temperature ?? 0;
-        const windSpeed = data.current?.windSpeed_10m ?? 0;
-        const weatherCode = data.current?.weatherCode ?? 0;
+        const tempRaw = data.weather?.temperature_2m ?? 0;
+        const humidity = data.weather?.relative_humidity_2m ?? 0;
+        const feelsLikeRaw = data.weather?.apparent_temperature ?? 0;
+        const windSpeed = data.weather?.wind_speed_10m ?? 0; 
+        const weatherCode = data.weather?.weather_code ?? 0;
 
         skeleton?.remove();
 
@@ -75,13 +89,12 @@ export async function getData(lat, long, city) {
             feelsLike = Math.floor(toFahrenheit(feelsLikeRaw));
         }
 
-        // Parse 5-day forecast
-        const forecastDays = forecastData.daily ? parseForecast(forecastData.daily, unitBtn) : [];
+        const forecastDays = forecastData.forecast ? parseForecast(forecastData.forecast, unitBtn) : [];
 
         newCard(city, temp, humidity, feelsLike, windSpeed, weatherCode, unit, forecastDays);
         removeBtn();
 
-        localStorage.setItem('storeCity', JSON.stringify(cityArr));
+        
     } catch (error) {
         let weatherError;
 
@@ -105,7 +118,6 @@ export async function getData(lat, long, city) {
 
 export async function getGeocode(city) {
     try {
-        const cityArr = JSON.parse(localStorage.getItem('storeCity')) || [];
         const normalizedCity = city.split(',')[0].trim().toLowerCase();
 
         const geocodeResponse = await fetch(
@@ -118,6 +130,7 @@ export async function getGeocode(city) {
 
         const geocode = await geocodeResponse.json();
 
+
         // Optional chaining on results
         const lat = geocode.results?.[0]?.latitude;
         const long = geocode.results?.[0]?.longitude;
@@ -126,13 +139,13 @@ export async function getGeocode(city) {
             throw new WeatherError(`City "${normalizedCity}" not found`);
         }
 
-        if (cityArr.some(item => item.city === normalizedCity)) {
-            alert("City already present");
+        const existingCities = Array.from(document.querySelectorAll('.city-card h2'))
+            .map(h2 => h2.textContent.toLowerCase());
+
+        if (existingCities.includes(normalizedCity)) {
+            alert("City already present on dashboard!");
             return;
         }
-
-        cityArr.push({ latitude: lat, longitude: long, city: normalizedCity });
-        localStorage.setItem('storeCity', JSON.stringify(cityArr));
 
         getData(lat, long, city);
     } catch (error) {
@@ -146,27 +159,60 @@ export async function getGeocode(city) {
 // --- Promise.allSettled: refresh all cities independently ---
 
 export async function refreshAll() {
-    const cityArr = JSON.parse(localStorage.getItem('storeCity')) || [];
+    try {
+        const response = await fetch('http://127.0.0.1:8000/my-cities', {
+            method: 'GET',
+            credentials: 'include' 
+        });
 
-    if (cityArr.length === 0) return;
-
-    document.querySelector('.dashboard').innerHTML = '';
-
-    const results = await Promise.allSettled(
-        cityArr.map(item => getData(item.latitude, item.longitude, item.city))
-    );
-
-    results.forEach((result, i) => {
-        if (result.status === 'rejected') {
-            const city = cityArr[i]?.city ?? 'unknown';
-            console.warn(`Failed to refresh "${city}":`, result.reason);
+        if (response.status === 401) {
+            throw new Error("UNAUTHORIZED"); 
         }
-    });
+
+        if (!response.ok) {
+            throw new Error("Failed to load cities from database");
+        }
+
+        const dbData = await response.json();
+        const cityArr = dbData.cities || [];
+
+        console.log(dbData);
+        console.log(cityArr);
+
+        document.querySelector('.dashboard').innerHTML = '';
+
+        if (cityArr.length === 0) {
+            console.log("Database is empty! Fetching user's current location...");
+            return; 
+        }
+
+        const results = await Promise.allSettled(
+            cityArr.map(item => getData(item.latitude, item.longitude, item.city))
+        );
+
+        results.forEach((result, i) => {
+            if (result.status === 'rejected') {
+                const city = cityArr[i]?.city ?? 'unknown';
+                console.warn(`Failed to refresh "${city}":`, result.reason);
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching dashboard from DB:", error);
+
+        if (error.message === "UNAUTHORIZED") {
+            alert("Your session has expired or you are not logged in. Please log in again.");
+            window.location.href = "login/login.html"; 
+        } else {
+            alert("Could not load your dashboard. Please try again later.");
+        }
+    }
 }
 
 
 
 export function createAutoRefresh(intervalMs = 600000) {
+    console.log('refresh');
     let intervalId = null;
 
     function start() {
@@ -196,35 +242,26 @@ function getPosition() {
 
 export async function currentLocation() {
     try {
-        const cityArr = JSON.parse(localStorage.getItem('storeCity')) || [];
+        // 1. First, tell the backend to load any saved cities
+        await refreshAll(); 
 
-        if (cityArr.length === 0) {
-            const position = await getPosition(); // ✅ now catchable
-
+        // 2. Check if the dashboard is still empty after the database load
+        const dashboard = document.querySelector('.dashboard');
+        
+        if (dashboard.children.length === 0) {
+            // The database had nothing, so let's get their GPS!
+            const position = await getPosition();
             const lat = position.coords?.latitude;
             const lon = position.coords?.longitude;
 
-            const response = await fetch(
-                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
-            );
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
 
-            if (!response.ok) {
-                throw new WeatherError("Failed to fetch location", response.status);
-            }
+            if (!response.ok) throw new WeatherError("Failed to fetch location", response.status);
 
             const data = await response.json();
-
-            const city =
-                data.address?.city ??
-                data.address?.town ??
-                data.address?.village ??
-                data.address?.municipality ??
-                'Unknown location';
+            const city = data.address?.city ?? data.address?.town ?? data.address?.village ?? 'Unknown location';
 
             getGeocode(city);
-
-        } else {
-            await refreshAll();
         }
 
     } catch (error) {
@@ -242,4 +279,8 @@ export async function currentLocation() {
 
         errorCard(weatherError);
     }
+}
+
+export async function report(){
+    window.location.href = '/report/report.html';
 }

@@ -1,5 +1,5 @@
 import { suggest } from './searchCity/search.js';
-import { currentLocation, createAutoRefresh } from './api/wheatherApi.js';
+import { currentLocation, createAutoRefresh ,report} from './api/wheatherApi.js';
 import { createSkeletonCard } from './mainContent/content.js';
 import { emptyDashboard } from './mainContent/emptyContent.js';
 
@@ -21,8 +21,12 @@ input.addEventListener("input", (e) => {
 
 const clear = document.querySelector('#clear');
 
-clear.addEventListener('click', () => {
-    localStorage.clear();
+clear.addEventListener('click', async() => {
+    let res=await fetch("http://127.0.0.1:8000/cleardb",{
+        method : 'GET',
+        credentials : 'include'
+    });
+
     document.querySelectorAll('.city-card').forEach(card => card.remove());
     emptyDashboard();
 });
@@ -42,3 +46,8 @@ unitBtn.addEventListener('click', () => {
     currentLocation();
 });
 
+const reportBtn = document.querySelector('#report');
+
+reportBtn.addEventListener('click', () =>{
+    report();
+})

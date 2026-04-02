@@ -1,0 +1,98 @@
+/* 1. Base Setup: Center the form on the screen */
+body {
+    margin: 0;
+    height: 100vh;
+    background: #F0F4F8;
+    font-family: system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 2. The Login Card: Matches your .city-card design */
+.login-form {
+    width: 320px;
+    background-color: white;
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 3. Input Groups */
+.login {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.login label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0D1117;
+    margin-left: 12px; /* Aligns visually with the curved input */
+}
+
+/* 4. Inputs: Matches your #city-name pill shapes */
+.login input {
+    border: 1px solid #E1E4E8;
+    background: rgba(240, 244, 248, 0.5); 
+    border-radius: 9999px;
+    padding: 12px 16px;
+    font-size: 15px;
+    outline: none;
+    color: #0D1117;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login input:focus {
+    border-color: #4F8EF7;
+    /* Adds a subtle blue glow when typing */
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.15); 
+}
+
+/* 5. Button: Matches your gradient buttons */
+.login-form button {
+    width: 100%;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 9999px;
+    background: linear-gradient(101.63deg, #4F8EF7 0%, #7C5CFC 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: opacity 0.2s ease;
+}
+
+.login-form button:hover {
+    opacity: 0.9;
+}
+
+/* 6. Footer Text & Links */
+.login-form p {
+    margin: 0;
+    font-size: 13px;
+    color: #57606A;
+    margin-bottom: 5px;
+}
+
+.login-form a {
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    /* Applies the gradient to the text itself */
+    background: linear-gradient(101.63deg, #4F8EF7 0%, #7C5CFC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 0.2s;
+}
+
+.login-form a:hover {
+    opacity: 0.7;
+}

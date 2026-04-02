@@ -228,6 +228,21 @@ h2{
     border: none;
     padding: 8px 16px;
     border-radius: 9999px;
+    margin-bottom: 30px;
+
+    background: linear-gradient(101.63deg, #4F8EF7 0%, #7C5CFC 100%);
+    color: white;
+
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#report{
+    display: block;
+    justify-self: center;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 9999px;
 
     background: linear-gradient(101.63deg, #4F8EF7 0%, #7C5CFC 100%);
     color: white;

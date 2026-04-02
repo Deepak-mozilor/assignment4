@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        async function checkAuth() {
+            try {
+                const res = await fetch("http://127.0.0.1:8000/verify-session", {
+                    method: "GET",
+                    // This is the magic word that sends the cookie to the bouncer!
+                    credentials: "include" 
+                });
+
+                // If the backend returns 401 Unauthorized, kick them out
+                if (!res.ok) {
+                    window.location.href = "/login/login.html";
+                }
+                // If res.ok is true, they stay on the page!
+
+            } catch (error) {
+                console.error("Auth check failed:", error);
+                window.location.href = "/login/login.html";
+            }
+        }
+
+        // Run the check immediately
+        checkAuth();
+    </script>
 </head>
 <body>
     <header>
@@ -29,6 +53,7 @@
             
         </div>
         <button id="clear">Clear</button>
+        <button id="report">Report</button>
     </main>
     <script type='module' src="src/app.js"></script>
 </body>
